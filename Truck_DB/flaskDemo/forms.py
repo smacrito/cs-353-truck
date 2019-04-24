@@ -5,32 +5,15 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError,Regexp
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flaskDemo import db
-from flaskDemo.models import User, Employee, Project, Department, getDepartment, getDepartmentFactory
+from flaskDemo.models import Customer, Employee, Purchase, Test_Drive, Vehicle #updated to Models
 from wtforms.fields.html5 import DateField
 
-projects = Project.query.with_entities(Project.pnumber, Project.pname).distinct()
-p_results=list()
-for row in projects:
-    p_rowDict=row._asdict()
-    p_results.append(p_rowDict)
-myProjectChoices = [(row['pnumber'],row['pname']) for row in p_results]
+import datetime #for year validation /AS
 
-ssns = Employee.query.with_entities(Employee.ssn, Employee.fname, Employee.lname).distinct()
-#  or could have used ssns = db.session.query(Department.mgr_ssn).distinct()
-# for that way, we would have imported db from flaskDemo, see above
+#****************************************************************************** /AS
+# Register, Login, Post Truck (edit/delete too), Schedule test drive, Search Truck
 
-#myChoices2 = [(row[0],row[0]) for row in ssns]  # change
-results=list()
-for row in ssns:
-    rowDict=row._asdict()
-    results.append(rowDict)
-myChoices = [(row['ssn'],(row['fname'],row['lname'])) for row in results]
-regex1='^((((19|20)(([02468][048])|([13579][26]))-02-29))|((20[0-9][0-9])|(19[0-9][0-9]))-((((0[1-9])'
-regex2='|(1[0-2]))-((0[1-9])|(1\d)|(2[0-8])))|((((0[13578])|(1[02]))-31)|(((0[1,3-9])|(1[0-2]))-(29|30)))))$'
-regex=regex1 + regex2
-
-
-
+trucks = Vehicle.query.with_entities(Vehicle.make).distinct()
 
 
 class RegistrationForm(FlaskForm):
@@ -82,12 +65,25 @@ class UpdateAccountForm(FlaskForm):
             if user:
                 raise ValidationError('That email is taken. Please choose a different one.')
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
+#****************************************************************************** /AS
+class PostTruck(FlaskForm):
+    make = StringField('Make', validators=[DataRequired()])
+    model = StringField('Model', validators=[DataRequired()])
+    year = IntegerField('Year', validators=[DataRequired(), year_check) #year_check used here
+    description = TextAreaField('Description', validators=[DataRequired()])
     submit = SubmitField('Post')
 
-    
+    def year_check(form,field):
+        now = datetime.datetime.now()
+        current_year = now.year
+        
+        if len(field.data) != 4 and field.data > (current_year + 1) or field.data < 1900:
+            raise ValidationError('Not a valid year.')
+
+class SearchTruck(FlaskForm):
+    make_list
+
+#****************************************************************************** /AS   
 class AssignUpdateForm(FlaskForm):
 
 #    dnumber=IntegerField('Department Number', validators=[DataRequired()])
