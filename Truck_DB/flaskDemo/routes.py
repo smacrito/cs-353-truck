@@ -164,7 +164,7 @@ def show_featured(vehicleID):
                                    user='truck',
                                    password='453truck')
     if conn.is_connected():
-        cursor = conn.cursor()
+        cursor = conn.cursor() # must add vehicle id here or find out how to put variable in for xxxxxx
     cursor.execute("SELECT * FROM vehicle WHERE vehicleID = xxxxxxx")
     row = cursor.fetchone()
 
