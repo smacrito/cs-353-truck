@@ -80,6 +80,7 @@ def save_picture(form_picture):
 
     return picture_fn
 
+#@app.route("/lookup"
 
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
@@ -147,7 +148,7 @@ def update_assign(essn,pno):
 
 
 # 7 Satisfied: Delete one record
-@app.route("/assign/<vehicleID>/delete", methods=['POST'])
+@app.route("assignVehicle/deleteVehicle/<vehicleID>/delete", methods=['POST'])
 @login_required
 def delete_vehicle(vehicleID):
     assign = Vehicle.query.get_or_404([vehicleID])
@@ -156,16 +157,33 @@ def delete_vehicle(vehicleID):
     flash('The truck has been deleted!', 'success')
     return redirect(url_for('home'))
 
-# 8 Satisfied: Simple SELECT SQL statement
-@app.route("/featured/<vehicleID>/", methods=['POST'])
+# 8 Satisfied: Simple SELECT SQL statement; 10 Satisfied: Select aggregate SQL query
+@app.route("/show_featured/<vehicleID>/", methods=['POST'])
+#show_featured will show 1 or more featured vehicles, like cheapest, or most luxurious
 def show_featured(vehicleID):
-    conn = mysql.connector.connect(host='45.55.59.121',
-                                   database='truck',
-                                   user='truck',
-                                   password='453truck')
-    if conn.is_connected():
-        cursor = conn.cursor() # must add vehicle id here or find out how to put variable in for xxxxxx
-    cursor.execute("SELECT * FROM vehicle WHERE vehicleID = xxxxxxx")
-    row = cursor.fetchone()
+    try:
+        conn = mysql.connector.connect(host='45.55.59.121',
+                                       database='truck',
+                                       user='truck',
+                                       password='453truck')
+        if conn.is_connected():
+            cursor = conn.cursor()                # must add vehicle id here or find out how to put variable in for xxxxxx
+        cursor.execute("SELECT * FROM vehicle WHERE vehicleID = x")#extract from form in crud-update
+        row = cursor.fetchone()
+        
+        cursor2 = conn.cursor()
+        cursor2.execute("SELECT MIN(price), vehicle.make FROM vehicle GROUP BY vehicleID")
+        row2 = cursor2.fetchone()
 
+        #add 11 satisfaction for sql with a possible drop down menu search for customers
+        #with price and make restrictions for example, to make a compound query
     
+    except Error as e:
+        print(e)#possibly delete or implement into the site
+
+    finally:
+        conn.close()
+
+    return render_template('show_featured.html', title='Featured Vehicles',row=row,row2=row2)
+
+
