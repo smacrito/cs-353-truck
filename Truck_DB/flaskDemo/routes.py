@@ -158,7 +158,7 @@ def delete_vehicle(vehicleID):
     return redirect(url_for('home'))
 
 # 8 Satisfied: Simple SELECT SQL statement; 10 Satisfied: Select aggregate SQL query
-@app.route("/show_featured/<vehicleID>/", methods=['POST'])
+@app.route("/show_featured", methods=['POST'])
 #show_featured will show 1 or more featured vehicles, like cheapest, or most luxurious
 def show_featured(vehicleID):
     try:
