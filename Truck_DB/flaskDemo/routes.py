@@ -146,13 +146,26 @@ def update_assign(essn,pno):
                            form=form, legend='Update Assign')
 
 
-
-
-@app.route("/assign/<essn>/<pno>/delete", methods=['POST'])
+# 7 Satisfied: Delete one record
+@app.route("/assign/<vehicleID>/delete", methods=['POST'])
 @login_required
-def delete_assign(essn, pno):
-    assign = Works_On.query.get_or_404([essn,pno])
+def delete_vehicle(vehicleID):
+    assign = Vehicle.query.get_or_404([vehicleID])
     db.session.delete(assign)
     db.session.commit()
-    flash('The assignment has been deleted!', 'success')
+    flash('The truck has been deleted!', 'success')
     return redirect(url_for('home'))
+
+# 8 Satisfied: Simple SELECT SQL statement
+@app.route("/featured/<vehicleID>/", methods=['POST'])
+def show_featured(vehicleID):
+    conn = mysql.connector.connect(host='45.55.59.121',
+                                   database='truck',
+                                   user='truck',
+                                   password='453truck')
+    if conn.is_connected():
+        cursor = conn.cursor()
+    cursor.execute("SELECT * FROM vehicle WHERE vehicleID = xxxxxxx")
+    row = cursor.fetchone()
+
+    
