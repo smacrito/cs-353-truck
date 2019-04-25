@@ -158,32 +158,36 @@ def delete_vehicle(vehicleID):
     return redirect(url_for('home'))
 
 # 8 Satisfied: Simple SELECT SQL statement; 10 Satisfied: Select aggregate SQL query
-@app.route("/show_featured", methods=['POST'])
+@app.route("/show_featured")
 #show_featured will show 1 or more featured vehicles, like cheapest, or most luxurious
-def show_featured(vehicleID):
+def show_featured():
+
+    import mysql.connector
+    from mysql.connector import Error
+    
     try:
         conn = mysql.connector.connect(host='45.55.59.121',
                                        database='truck',
                                        user='truck',
                                        password='453truck')
         if conn.is_connected():
-            cursor = conn.cursor()                # must add vehicle id here or find out how to put variable in for xxxxxx
-        cursor.execute("SELECT * FROM vehicle WHERE vehicleID = x")#extract from form in crud-update
-        row = cursor.fetchone()
+            cursor = conn.cursor(dictionary=True)    # must add vehicle id here or find out how to put variable in for xxxxxx
+        #cursor.execute("SELECT * FROM vehicle WHERE vehicleID = x")#extract from form in crud-update
+        cursor.execute("SELECT * FROM vehicle WHERE vehicleid = 3")
+        row = cursor.fetchall()
         
-        cursor2 = conn.cursor()
-        cursor2.execute("SELECT MIN(price), vehicle.make FROM vehicle GROUP BY vehicleID")
-        row2 = cursor2.fetchone()
+        cursor2 = conn.cursor(dictionary=True)
+        cursor2.execute("SELECT MIN(price), vehicle.make, vehicle.price FROM vehicle GROUP BY vehicleid")
+        row2 = cursor2.fetchall()
 
         #add 11 satisfaction for sql with a possible drop down menu search for customers
         #with price and make restrictions for example, to make a compound query
-    
+
+        return render_template('show_featured.html', title='Featured Vehicles',row=row,row2=row2)
+
+
     except Error as e:
         print(e)#possibly delete or implement into the site
 
     finally:
         conn.close()
-
-    return render_template('show_featured.html', title='Featured Vehicles',row=row,row2=row2)
-
-
