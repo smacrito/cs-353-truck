@@ -4,7 +4,7 @@
     <img class="rounded-circle article-img" src="{{ url_for('static', filename='FILEFOLDER/' + truck.vehicle.FILENAME) }}">
     <div class="media-body">
       <div class="article-metadata">
-        <a class="mr-2" href="#">{{ truck.vehicle.make }}</a>
+        <a class="mr-2" href="#">{{ truck.make }}</a>
         <small class="text-muted">{{ truck.date_posted.strftime('%Y-%m-%d') }}</small>
         {% if post.author == current_user %}
           <div>

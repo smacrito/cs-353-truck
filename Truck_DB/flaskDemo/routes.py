@@ -148,10 +148,10 @@ def update_assign(essn,pno):
 
 
 # 7 Satisfied: Delete one record
-@app.route("assignVehicle/deleteVehicle/<vehicleID>/delete", methods=['POST'])
+@app.route("assignVehicle/deleteVehicle/<vehicleid>/delete", methods=['POST'])
 @login_required
-def delete_vehicle(vehicleID):
-    assign = Vehicle.query.get_or_404([vehicleID])
+def delete_vehicle(vehicleid):
+    assign = Vehicle.query.get_or_404([vehicleid])
     db.session.delete(assign)
     db.session.commit()
     flash('The truck has been deleted!', 'success')
