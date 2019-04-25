@@ -69,7 +69,7 @@ class UpdateAccountForm(FlaskForm):
 class PostTruck(FlaskForm):
     make = StringField('Make', validators=[DataRequired()])
     model = StringField('Model', validators=[DataRequired()])
-    year = IntegerField('Year', validators=[DataRequired(), year_check) #year_check used here
+    year = IntegerField('Year', validators=[DataRequired(), year_check()]) #year_check used here
     description = TextAreaField('Description', validators=[DataRequired()])
     submit = SubmitField('Post')
 
