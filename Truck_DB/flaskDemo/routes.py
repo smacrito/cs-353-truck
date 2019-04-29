@@ -14,12 +14,11 @@ from datetime import datetime
 def home():
     #results = Department.query.all()
     #return render_template('dept_home.html', outString = results)
-    #posts = Post.query.all()
+    #posts =  Post.query.all()
     #return render_template('home.html', posts=posts)
-    results3 = Employee.query.join(Works_On,Employee.ssn == Works_On.essn) \
-                .add_columns(Employee.fname, Employee.lname, Works_On.essn, Works_On.pno, Works_On.hours) \
-                .join(Project, Works_On.pno == Project.pnumber).add_columns(Project.pname)
-    return render_template('assign_home.html', title='Join',joined_m_n=results3)
+    truckResults = 
+    results3 = Vehicle.query.get_or_404([make,model])
+    return render_template('home.html', title='Home',trucks=truckResults)
 
 
    

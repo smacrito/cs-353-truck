@@ -5,11 +5,10 @@
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='INSERTFOLDER/' + truck.vehicle.FILENAME) }}">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ truck.model }}</a>
-              <small class="text-muted">{{ truck.date_posted.strftime('%Y-%m-%d') }}</small>
+              <a class="mr-2" href="#">{{ truck.make }}</a>
             </div>
             <h2><a class="article-title" href="{{ url_for('truck', truck_id=truck.VehicleID) }}">{{ truck.title }}</a></h2>
-            <p class="article-content">{{ truck.make }}</p>
+            <p class="article-content">{{ truck.model }}</p>
           </div>
         </article>
     {% endfor %}
