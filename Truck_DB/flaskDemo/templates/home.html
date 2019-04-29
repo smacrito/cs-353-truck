@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "layout.html" %}
 {% block content %}
     {% for truck in trucks %}
@@ -9,4 +10,17 @@
           </div>
         </article>
     {% endfor %}
+=======
+{% extends "layout.html" %}
+{% block content %}
+    {% for truck in trucks %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ truck.make }}{{ truck.model }}</a>
+            </div>
+          </div>
+        </article>
+    {% endfor %}
+>>>>>>> ab80b717fe310fca5c7a6130d35e846d2cb88a9b
 {% endblock content %}
