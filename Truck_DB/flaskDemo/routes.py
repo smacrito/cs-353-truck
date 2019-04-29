@@ -3,8 +3,8 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskDemo import app, db, bcrypt
-from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, AssignForm,AssignUpdateForm
-from flaskDemo.models import User, Post, Department, Dependent, Dept_Locations, Employee, Project, Works_On
+from flaskDemo.forms import RegistrationForm, LoginForm #UpdateAccountForm,AssignUpdateForm PostForm,, AssignForm
+from flaskDemo.models import Customer, Employee, Purchase, Test_Drive, Vehicle
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
 
@@ -16,10 +16,14 @@ def home():
     #return render_template('dept_home.html', outString = results)
     #posts = Post.query.all()
     #return render_template('home.html', posts=posts)
-    results3 = Employee.query.join(Works_On,Employee.ssn == Works_On.essn) \
-                .add_columns(Employee.fname, Employee.lname, Works_On.essn, Works_On.pno, Works_On.hours) \
-                .join(Project, Works_On.pno == Project.pnumber).add_columns(Project.pname)
-    return render_template('assign_home.html', title='Join',joined_m_n=results3)
+    display = Vehicle.query.group_by(Vehicle.model).all()
+
+    #results = Department.query.all()
+    #return render_template('dept_home.html', outString = results)
+    #posts =  Post.query.all()
+    #return render_template('home.html', posts=posts)
+    #truckResults = Vehicle.query.get_or_404([make,model])
+    return render_template('home.html', title='Join', trucks=display)
 
 
    
@@ -37,8 +41,8 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.add(user)
+        customer = Customer(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data, password=form.password.data, address=form.address.data)
+        db.session.add(customer)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
@@ -51,9 +55,9 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
+        customer = Customer.query.filter_by(email=form.email.data).first()
+        if customer and bcrypt.check_password_hash(customer.password, form.password.data):
+            login_user(csutomer, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -80,27 +84,26 @@ def save_picture(form_picture):
 
     return picture_fn
 
-#@app.route("/lookup"
+#@app.route("/lookup")
 
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        if form.picture.data:
-            picture_file = save_picture(form.picture.data)
-            current_user.image_file = picture_file
-        current_user.username = form.username.data
+        current_user.first_name = form.first_name.data
+        current_user.last_name = form.last_name.data
         current_user.email = form.email.data
+        current_user.address = form.address.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('account'))
     elif request.method == 'GET':
-        form.username.data = current_user.username
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
         form.email.data = current_user.email
-    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template('account.html', title='Account',
-                           image_file=image_file, form=form)
+        form.address.data = current_user.address
+    return render_template('account.html', title='Account', form=form)
 
 
 @app.route("/assign/new", methods=['GET', 'POST'])
@@ -148,7 +151,7 @@ def update_assign(essn,pno):
 
 
 # 7 Satisfied: Delete one record
-@app.route("assignVehicle/deleteVehicle/<vehicleid>/delete", methods=['POST'])
+@app.route("/vehicle/<vehicleid>/delete", methods=['POST'])
 @login_required
 def delete_vehicle(vehicleid):
     assign = Vehicle.query.get_or_404([vehicleid])

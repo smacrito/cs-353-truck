@@ -17,97 +17,83 @@ trucks = Vehicle.query.with_entities(Vehicle.make).distinct()
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
+    first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=20)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password',
-                                     validators=[DataRequired(), EqualTo('password')])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    address = StringField('Address', validators=[DataRequired(), Length(min=2, max=100)])
     submit = SubmitField('Sign Up')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('That username is taken. Please choose a different one.')
-
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
+        user = Employee.query.filter_by(email=email.data).first()
         if user:
-            raise ValidationError('That email is taken. Please choose a different one.')
+            raise ValidationError('That email is already being used. Please use a different one.')
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
 
 class UpdateAccountForm(FlaskForm):
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+    first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=20)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[DataRequired(), Length(min=2, max=100)])
     submit = SubmitField('Update')
-
-    def validate_username(self, username):
-        if username.data != current_user.username:
-            user = User.query.filter_by(username=username.data).first()
-            if user:
-                raise ValidationError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
         if email.data != current_user.email:
-            user = User.query.filter_by(email=email.data).first()
+            user = Employee.query.filter_by(email=email.data).first()
             if user:
-                raise ValidationError('That email is taken. Please choose a different one.')
+                raise ValidationError('That email is already being used. Please use a different one.')
 
 #****************************************************************************** /AS
 class PostTruck(FlaskForm):
     make = StringField('Make', validators=[DataRequired()])
     model = StringField('Model', validators=[DataRequired()])
-    year = IntegerField('Year', validators=[DataRequired(), year_check()]) #year_check used here
+    year = IntegerField('Year', validators=[DataRequired()]) #year_check used here # , year_check()
     description = TextAreaField('Description', validators=[DataRequired()])
     submit = SubmitField('Post')
 
-    def year_check(form,field):
+    def year_check(form,year):
         now = datetime.datetime.now()
         current_year = now.year
         
         if len(field.data) != 4 and field.data > (current_year + 1) or field.data < 1900:
             raise ValidationError('Not a valid year.')
 
-class SearchTruck(FlaskForm):
-    make_list
+#class SearchTruck(FlaskForm):
+#    make_list
 
 #****************************************************************************** /AS   
-class AssignUpdateForm(FlaskForm):
+#class AssignUpdateForm(FlaskForm):
 
-#    dnumber=IntegerField('Department Number', validators=[DataRequired()])
-    #essn = HiddenField("")
+            #    dnumber=IntegerField('Department Number', validators=[DataRequired()])
+                #essn = HiddenField("")
 
-#  Commented out using a text field, validated with a Regexp.  That also works, but a hassle to enter ssn.
-#    mgr_ssn = StringField("Manager's SSN", validators=[DataRequired(),Regexp('^(?!000|666)[0-8][0-9]{2}(?!00)[0-9]{2}(?!0000)[0-9]{4}$', message="Please enter 9 digits for a social security.")])
+            #  Commented out using a text field, validated with a Regexp.  That also works, but a hassle to enter ssn.
+            #    mgr_ssn = StringField("Manager's SSN", validators=[DataRequired(),Regexp('^(?!000|666)[0-8][0-9]{2}(?!00)[0-9]{2}(?!0000)[0-9]{4}$', message="Please enter 9 digits for a social security.")])
 
-#  One of many ways to use SelectField or QuerySelectField.  Lots of issues using those fields!!
-    #employee = SelectField("Employee", choices=myChoices)  # myChoices defined at top
-    #project = SelectField("Project", project_choices=myProjectChoices)
+            #  One of many ways to use SelectField or QuerySelectField.  Lots of issues using those fields!!
+                #employee = SelectField("Employee", choices=myChoices)  # myChoices defined at top
+                #project = SelectField("Project", project_choices=myProjectChoices)
 
-    #hours = IntegerField("Hours", validators=[DataRequired()])
-# the regexp works, and even gives an error message
-#    mgr_start=DateField("Manager's Start Date:  yyyy-mm-dd",validators=[Regexp(regex)])
-#    mgr_start = DateField("Manager's Start Date")
+                #hours = IntegerField("Hours", validators=[DataRequired()])
+            # the regexp works, and even gives an error message
+            #    mgr_start=DateField("Manager's Start Date:  yyyy-mm-dd",validators=[Regexp(regex)])
+            #    mgr_start = DateField("Manager's Start Date")
 
-#    mgr_start=DateField("Manager's Start Date", format='%Y-%m-%d')
+            #    mgr_start=DateField("Manager's Start Date", format='%Y-%m-%d')
 
-    ssn = SelectField("Employee", choices=myChoices)
-    pnumber = SelectField("Project Number", coerce=int, choices=myProjectChoices)
-    hours = DecimalField("Hours", places=1, validators=[DataRequired()])
+    #ssn = SelectField("Employee", choices=myChoices)
+    #pnumber = SelectField("Project Number", coerce=int, choices=myProjectChoices)
+    #hours = DecimalField("Hours", places=1, validators=[DataRequired()])
 
-    submit = SubmitField('Update this assign')
+    #submit = SubmitField('Update this assign')
 
 
 # got rid of def validate_dnumber
@@ -118,9 +104,9 @@ class AssignUpdateForm(FlaskForm):
 #             raise ValidationError('That department name is already being used. Please choose a different name.')
 
 
-class AssignForm(AssignUpdateForm):
+#class AssignForm(AssignUpdateForm):
 
-    submit = SubmitField('Add this assignment')
+    #submit = SubmitField('Add this assignment')
 
 #    def validate_essn(self, dnumber):    #because dnumber is primary key and should be unique
 #        dept = Department.query.filter_by(dnumber=dnumber.data).first()

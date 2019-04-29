@@ -6,12 +6,12 @@ from sqlalchemy import orm
 
 db.Model.metadata.reflect(db.engine)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
 class Customer(db.Model):
     __table__ = db.Model.metadata.tables['customer']
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Customer.query.get(int(user_id)) #customerid
 
 class Employee(db.Model):
     __table__ = db.Model.metadata.tables['employee']
