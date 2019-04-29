@@ -16,8 +16,7 @@ def home():
     #return render_template('dept_home.html', outString = results)
     #posts =  Post.query.all()
     #return render_template('home.html', posts=posts)
-    truckResults = 
-    results3 = Vehicle.query.get_or_404([make,model])
+    truckResults = Vehicle.query.get_or_404([make,model])
     return render_template('home.html', title='Home',trucks=truckResults)
 
 
