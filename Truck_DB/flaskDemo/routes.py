@@ -25,7 +25,7 @@ def home():
     #truckResults = Vehicle.query.get_or_404([make,model])
     return render_template('home.html', title='Join', trucks=display)
 
-
+ 
    
 
 
@@ -57,7 +57,7 @@ def login():
     if form.validate_on_submit():
         customer = Customer.query.filter_by(email=form.email.data).first()
         if customer and bcrypt.check_password_hash(customer.password, form.password.data):
-            login_user(csutomer, remember=form.remember.data)
+            login_user(customer, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -155,6 +155,15 @@ def update_assign(essn,pno):
 @login_required
 def delete_vehicle(vehicleid):
     assign = Vehicle.query.get_or_404([vehicleid])
+    db.session.delete(assign)
+    db.session.commit()
+    flash('The truck has been deleted!', 'success')
+    return redirect(url_for('home'))
+
+@app.route("/vehicle/<vehicleid>/", methods=['POST'])
+@login_required
+def vehicle(vehicleid):
+    truck = Vehicle.query.get_or_404([vehicleid])
     db.session.delete(assign)
     db.session.commit()
     flash('The truck has been deleted!', 'success')
