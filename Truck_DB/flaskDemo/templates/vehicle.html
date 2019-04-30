@@ -1,26 +1,29 @@
-<<<<<<< HEAD
 {% extends "layout.html" %}
 {% block content %}
-    {% for truck in trucks %}
+    {% for truck in vehicle %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ truck.make }}{{ truck.model }}</a>
+              <!--<a class="mr-2" href="#">{{ truck }}</a> <br/>-->
+              <small class="text-muted">{{ truck.vehicleid }}</small>
             </div>
+           
           </div>
         </article>
-    {% endfor %}
-=======
-{% extends "layout.html" %}
-{% block content %}
-    {% for truck in trucks %}
+     {% endfor %}
+	 <!--
+	 {% for truck in row2 %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('vehicle', make=truck.make, model=truck.model) }}">{{ truck.make }}{{ truck.model }}</a>
+              <!--<a class="mr-2" href="#">{{ row }}</a> <br/>
+              <small class="text-muted">{{ truck.price }} {{ truck.make }}</small>
             </div>
+           
           </div>
         </article>
-    {% endfor %}
->>>>>>> temp
+     {% endfor %}
+	 -->
+
+	
 {% endblock content %}
