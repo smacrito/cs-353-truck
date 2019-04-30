@@ -149,10 +149,16 @@ def update_assign(essn,pno):
     return render_template('create_assign.html', title='Update Assign',
                            form=form, legend='Update Assign')
 
+@app.route("/vehicle/<make>/<model>", methods=['GET','POST'])
+#@login_required
+def vehicle(make, model):
+    #vehicle = Vehicle.query.where(Vehicle.model=model).all()
+    return render_template('vehicle.html', title='Vehicle',
+                           vehicle=vehicle, legend='Vehicle')
 
 # 7 Satisfied: Delete one record
 @app.route("/vehicle/<vehicleid>/delete", methods=['POST'])
-@login_required
+#@login_required
 def delete_vehicle(vehicleid):
     assign = Vehicle.query.get_or_404([vehicleid])
     db.session.delete(assign)
