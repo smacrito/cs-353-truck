@@ -41,7 +41,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        customer = Customer(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data, password=form.password.data, address=form.address.data)
+        customer = Customer(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data, password=hashed_password, address=form.address.data)
         db.session.add(customer)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
@@ -152,7 +152,7 @@ def update_assign(essn,pno):
 
 # 7 Satisfied: Delete one record
 @app.route("/vehicle/<vehicleid>/delete", methods=['POST'])
-@login_required
+#@login_required
 def delete_vehicle(vehicleid):
     assign = Vehicle.query.get_or_404([vehicleid])
     db.session.delete(assign)
@@ -160,15 +160,13 @@ def delete_vehicle(vehicleid):
     flash('The truck has been deleted!', 'success')
     return redirect(url_for('home'))
 
-@app.route("/vehicle/<vehicleid>/", methods=['POST'])
-@login_required
-def vehicle(vehicleid):
-    truck = Vehicle.query.get_or_404([vehicleid])
-    db.session.delete(assign)
-    db.session.commit()
-    flash('The truck has been deleted!', 'success')
-    return redirect(url_for('home'))
-
+@app.route("/vehicle/<make>/<model>", methods=['POST'])
+#@login_required
+def vehicle(make, model):
+    dump()
+    #vehicle = Vehicle.query.where(Vehicle.model=model).all()
+    return render_template('vehicle.html', title='Vehicle',
+                           vehicle=vehicle, legend='Vehicle')
 # 8 Satisfied: Simple SELECT SQL statement; 10 Satisfied: Select aggregate SQL query
 @app.route("/show_featured")
 #show_featured will show 1 or more featured vehicles, like cheapest, or most luxurious
