@@ -122,7 +122,7 @@ def new_assign():
 
 @app.route("/assign/<pno>/<essn>")
 @login_required
-def assign(pno, essn):
+def assign(make, model):
     assign = Works_On.query.get_or_404([essn,pno])
     return render_template('assign.html', title=str(assign.essn) + "_" + str(assign.pno), assign=assign, now=datetime.utcnow())
 
@@ -151,10 +151,11 @@ def update_assign(essn,pno):
 
 @app.route("/vehicle/<make>/<model>", methods=['GET','POST'])
 #@login_required
-def vehicle(make, model):
+def show_vehicle(make, model):
+    truck = Vehicle.query.all() ##FIND
     #vehicle = Vehicle.query.where(Vehicle.model=model).all()
-    return render_template('vehicle.html', title='Vehicle',
-                           vehicle=vehicle, legend='Vehicle')
+    return render_template('show_vehicle.html', title='Vehicle',
+                           truck=truck, legend='Vehicle')
 
 # 7 Satisfied: Delete one record
 @app.route("/vehicle/<vehicleid>/delete", methods=['POST'])
