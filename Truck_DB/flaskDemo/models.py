@@ -19,6 +19,13 @@ class Customer(db.Model):
     def is_authenticated(self):
         return True
 
+    def is_active(self):
+        return True
+
+    #supposed to return customerid
+    def get_id(self):
+        return self.query.filter_by(email=self.email).first().customerid
+
 class Employee(db.Model):
     __table__ = db.Model.metadata.tables['employee']
 
