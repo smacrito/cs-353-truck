@@ -112,7 +112,7 @@ def create():
                                         user='truck',
                                         password='453truck')
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(prepared=True)
         print("CONNECTED")
         form = createForm()
         makes = Vehicle.query.with_entities(Vehicle.make).distinct()#possible extra points for distinct dropdown list?
