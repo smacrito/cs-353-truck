@@ -56,9 +56,12 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        customer = Customer.query.filter_by(email=form.email.data).first()
-        if customer and (customer.password == form.password.data):
-            login_user(customer, remember=form.remember.data)
+        if form.admin.data:
+            user = Employee.query.filter_by(email=form.email.data).first()
+        else:
+            user = Customer.query.filter_by(email=form.email.data).first()
+        if user and (user.password == form.password.data):
+            login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
