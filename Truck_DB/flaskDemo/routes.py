@@ -185,7 +185,7 @@ def show_by_id(vehicleid):
   
 # 7 Satisfied: Delete one record
 @app.route("/vehicle/<vehicleid>/delete", methods=['GET', 'POST'])
-#@login_required
+@login_required
 def delete_vehicle(vehicleid):
     assign = Vehicle.query.get_or_404(vehicleid)
     db.session.delete(assign)
