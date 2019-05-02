@@ -38,13 +38,15 @@ def join():
                                        password='453truck')
         
         if conn.is_connected():
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
             cursor.execute(
-                "SELECT * " +
-                "FROM vehicle " +
-                "INNER JOIN purchase " +
-                "ON vehicle.vehicleid = purchase.vehicleid " +
-                "WHERE vehicle.vehicleid = 1"
+                """
+                SELECT *
+                FROM vehicle  
+                INNER JOIN purchase  
+                ON vehicle.vehicleid = purchase.vehicleid
+                WHERE vehicle.vehicleid = 1
+                """
                 )
             data = cursor.fetchall()
 

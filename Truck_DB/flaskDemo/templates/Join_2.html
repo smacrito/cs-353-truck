@@ -2,9 +2,12 @@
 {% block content %}
     <h1>Join Queries</h1>
     <small> Purchases:</small>
+	</br>
+	<small> SQL Join:</small>
     {% for d in data %}
         <p> {{d.make}} {{d.model}} {{d.color}} </p>
     {% endfor %}
+	<small> Flask Join:</small>
     {% for i in sqldata %}
         <p> {{i.make}} {{i.model}} {{i.color}} </p>
     {% endfor %}
