@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Join Queries</h1>
+    <small> Purchases:</small>
+    {% for d in data %}
+        <p> {{d.make}} {{d.model}} {{d.color}} </p>
+    {% endfor %}
+    {% for i in sqldata %}
+        <p> {{i.make}} {{i.model}} {{i.color}} </p>
+    {% endfor %}
+{% endblock content %}
