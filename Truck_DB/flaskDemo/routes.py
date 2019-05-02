@@ -167,14 +167,20 @@ def show_vehicle(make, model):
     return render_template('show_vehicle.html', title='Vehicle',
                            truck=truck, legend='Vehicle')
 
+@app.route("/assign/<vehicleid>")
+@login_required
+def show_by_id(vehicleid):
+    assign = Vehicle.query.get_or_404(vehicleid)
+    return render_template('vehicle_by_id.html', title="Delete" + str(assign.vehicleid) + ", " + str(assign.model), assign=assign)
+  
 # 7 Satisfied: Delete one record
-@app.route("/vehicle/<vehicleid>/delete", methods=['POST'])
+@app.route("/vehicle/<vehicleid>/delete", methods=['GET', 'POST'])
 #@login_required
 def delete_vehicle(vehicleid):
-    assign = Vehicle.query.get_or_404([vehicleid])
+    assign = Vehicle.query.get_or_404(vehicleid)
     db.session.delete(assign)
     db.session.commit()
-    flash('The truck has been deleted!', 'success')
+    ##flash('The truck has been deleted!', 'success')
     return redirect(url_for('home'))
 
 

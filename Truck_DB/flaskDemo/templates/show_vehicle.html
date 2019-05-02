@@ -5,25 +5,15 @@
           <div class="media-body">
             <div class="article-metadata">
               <!--<a class="mr-2" href="#">{{ truck }}</a> <br/>-->
-              <small class="text-muted">{{ truck.vehicleid }}</small>
+              <h2>{{ truck.make }} - {{ truck.model }} <span style="text-size: 12pt"><a href="{{ url_for('show_by_id', vehicleid=truck.vehicleid) }}">Delete</a></span></h2>
+			  <h6>Color: <span style="background-color: {{ truck.color }}">{{ truck.color }}</span></h6>
+			  <h6>Year: {{ truck.year }}</h6>
+			  <h6>Price: {{ truck.price }}</h6>
+			  
             </div>
-           
           </div>
         </article>
      {% endfor %}
-	 <!--
-	 {% for truck in row2 %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <!--<a class="mr-2" href="#">{{ row }}</a> <br/>
-              <small class="text-muted">{{ truck.price }} {{ truck.make }}</small>
-            </div>
-           
-          </div>
-        </article>
-     {% endfor %}
-	 -->
 
 	
 {% endblock content %}
