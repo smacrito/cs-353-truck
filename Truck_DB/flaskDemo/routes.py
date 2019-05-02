@@ -114,31 +114,7 @@ def save_picture(form_picture):
 
     return picture_fn
 
-@app.route("/account", methods=['GET', 'POST'])
-@login_required
-def account():
-    form = UpdateAccountForm()
-    if form.validate_on_submit():
-        current_user.first_name = form.first_name.data
-        current_user.last_name = form.last_name.data
-        current_user.email = form.email.data
-        current_user.address = form.address.data
-        db.session.commit()
-        flash('Your account has been updated!', 'success')
-        return redirect(url_for('account'))
-    elif request.method == 'GET':
-        form.first_name.data = current_user.first_name
-        form.last_name.data = current_user.last_name
-        form.email.data = current_user.email
-        form.address.data = current_user.address
-    return render_template('account.html', title='Account', form=form)
 
-
-@app.route("/assign/<pno>/<essn>", methods=['GET','POST'])
-@login_required
-def assign(make, model):
-    assign = Works_On.query.get_or_404([essn,pno])
-    return render_template('assign.html', title=str(assign.essn) + "_" + str(assign.pno), assign=assign, now=datetime.utcnow())
 
 @app.route("/create", methods=['GET','POST'])
 def create():
@@ -178,29 +154,6 @@ def create():
         conn.close()
     return render_template("create_vehicle.html", title = "Create Vehicle", form=form, makes=makes, models=models,colors=colors,years=years)
 
-
-
-@app.route("/assign/<essn>/<pno>/update", methods=['GET', 'POST'])
-@login_required
-def update_assign(essn,pno):
-    assign = Works_On.query.get_or_404([essn,pno])
-    currentAssign = assign.pno
-
-    form = AssignUpdateForm()
-    if form.validate_on_submit():          # notice we are are not passing the dnumber from the form
-        assign.essn=form.ssn.data
-        assign.pno=form.pnumber.data
-        assign.hours=form.hours.data
-        db.session.commit()
-        flash('Your assign has been updated!', 'success')
-        return redirect(url_for('assign', pno=form.pnumber.data, essn=form.ssn.data))
-    elif request.method == 'GET':              # notice we are not passing the dnumber to the form
-
-        form.pnumber.data = assign.pno
-        form.ssn.data = assign.essn
-        form.hours.data = assign.hours
-    return render_template('create_assign.html', title='Update Assign',
-                           form=form, legend='Update Assign')
 
 @app.route("/vehicle/<make>/<model>", methods=['GET','POST'])
 #@login_required
