@@ -188,13 +188,17 @@ def show_featured():
         row = cursor.fetchall()
         
         cursor2 = conn.cursor(dictionary=True)
-        cursor2.execute("SELECT * FROM vehicle ORDER BY price, color ASC LIMIT 3")# confirmed working. now uses order by instead of group by
+        cursor2.execute("SELECT * FROM vehicle ORDER BY price ASC LIMIT 3")# confirmed working. now uses order by instead of group by
         row2 = cursor2.fetchall()
+
+        cursor3 = conn.cursor(dictionary=True)
+        cursor3.execute("SELECT * FROM vehicle WHERE price >105000 AND price < 120000")# confirmed working. now uses order by instead of group by
+        row3 = cursor3.fetchall()
 
         #add 11 satisfaction for sql with a possible drop down menu search for customers
         #with price and make restrictions for example, to make a compound query
 
-        return render_template('show_featured.html', title='Featured Vehicles',row=row,row2=row2)
+        return render_template('show_featured.html', title='Featured Vehicles',row=row,row2=row2,row3=row3)
 
 
     except Error as e:

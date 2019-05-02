@@ -24,6 +24,19 @@
           </div>
         </article>
      {% endfor %}
+	 
+	 <header> Mid-Tier Trucks: </header>
+	 {% for truck in row3 %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <!--<a class="mr-2" href="#">{{ row }}</a> <br/>-->
+              <small class="text-muted">{{truck.color}} {{truck.make}} {{truck.model}} ${{truck.price}}</small>
+            </div>
+           
+          </div>
+        </article>
+     {% endfor %}
 
 	
 {% endblock content %}
