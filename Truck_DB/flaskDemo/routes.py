@@ -184,11 +184,11 @@ def show_featured():
         if conn.is_connected():
             cursor = conn.cursor(dictionary=True)    # must add vehicle id here or find out how to put variable in for xxxxxx
         #cursor.execute("SELECT * FROM vehicle WHERE vehicleID = x")#extract from form in crud-update
-        cursor.execute("SELECT * FROM vehicle WHERE vehicleid = 3 FETCH NEXT 5 ROWS ONLY ") #checked and working
+        cursor.execute("SELECT * FROM vehicle WHERE vehicleid = 3") #checked and working
         row = cursor.fetchall()
         
         cursor2 = conn.cursor(dictionary=True)
-        cursor2.execute("SELECT vehicle.make, vehicle.price FROM vehicle ORDER BY price ASC")# confirmed working. now uses order by instead of group by
+        cursor2.execute("SELECT * FROM vehicle ORDER BY price ASC LIMIT 3")# confirmed working. now uses order by instead of group by
         row2 = cursor2.fetchall()
 
         #add 11 satisfaction for sql with a possible drop down menu search for customers
