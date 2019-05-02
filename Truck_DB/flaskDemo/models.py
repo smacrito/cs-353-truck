@@ -29,6 +29,19 @@ class Customer(db.Model):
 class Employee(db.Model):
     __table__ = db.Model.metadata.tables['employee']
 
+    def __repr__(self):
+        return f"Employee('{self.first_name}',{self.last_name}', '{self.email}', '{self.address}')"
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    #supposed to return employeeid
+    def get_id(self):
+        return self.query.filter_by(email=self.email).first().employeeid
+
 class Purchase(db.Model):
     __table__ = db.Model.metadata.tables['purchase']
 
