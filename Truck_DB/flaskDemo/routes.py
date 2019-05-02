@@ -25,6 +25,37 @@ def home():
 def about():
     return render_template('about.html', title='About')
 
+@app.route("/join")
+def join():
+    
+    import mysql.connector
+    from mysql.connector import Error
+    
+    try:
+        conn = mysql.connector.connect(host='45.55.59.121',
+                                       database='truck',
+                                       user='truck',
+                                       password='453truck')
+        
+        if conn.is_connected():
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT * " +
+                "FROM vehicle " +
+                "INNER JOIN purchase " +
+                "ON vehicle.vehicleid = purchase.vehicleid " +
+                "WHERE vehicle.vehicleid = 1"
+                )
+            data = cursor.fetchall()
+
+            # Satisfies sqlAlchemy part of 12
+            sqldata = Vehicle.query.join(Purchase, Vehicle.vehicleid==Purchase.vehicleid)
+            return render_template('Join_2.html', title='Join', data=data, sqldata=sqldata)
+    except Error as e:
+        print(e)
+
+    finally:
+        conn.close()
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
