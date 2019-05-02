@@ -8,6 +8,9 @@ from flaskDemo import app, db, bcrypt
 from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, createForm#, AssignUpdateForm, PostForm, AssignForm
 from flaskDemo.models import Customer, Employee, Purchase, Test_Drive, Vehicle
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
 from datetime import datetime
 
 
@@ -109,7 +112,7 @@ def create():
                                         user='truck',
                                         password='453truck')
         
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(prepared=True)
         print("CONNECTED")
         form = createForm()
         makes = Vehicle.query.with_entities(Vehicle.make).distinct()#possible extra points for distinct dropdown list?
@@ -119,22 +122,25 @@ def create():
         if form.validate_on_submit():
             print("in if")
             truck = Vehicle(make = form.make.data, model = form.model.data, color = form.color.data, year = form.year.data)
-            #cursor.execute("INSTE
-            #db.session.add(truck)
-            cursor.execute("""INSERT INTO vehicle ('make','model','color','year') VALUES (%s, %s,%s,%d)""", make,model,color,year)
+            make = request.form["make"]
+            model = request.form["model"]
+            color = request.form["color"]
+            year = request.form["year"]
+            picture="none.jpg"
+            cursor.execute("""INSERT INTO vehicle (make,model,color,year,picture) VALUES (%s, %s,%s,%s,%s)""", (make,model,color,year,picture))
             conn.commit()
             flash('Added truck', 'success')
-            return redirect(url_for('create_vehicle', ))
-        #if request.method == 'POST':
-           # make = request.form['make']
-            #flash(str(make))
-        return render_template("create_vehicle.html", title = "Create Vehicle", form=form, makes=makes, models=models,colors=colors,years=years)
+            return redirect(url_for('home', ))
 
+        
     except Error as e:
+        print("error")
         print(e)#possibly delete or implement into the site
-
+    
     finally:
-        conn.close()        
+        conn.close()
+    return render_template("create_vehicle.html", title = "Create Vehicle", form=form, makes=makes, models=models,colors=colors,years=years)
+
 
 
 @app.route("/assign/<essn>/<pno>/update", methods=['GET', 'POST'])
