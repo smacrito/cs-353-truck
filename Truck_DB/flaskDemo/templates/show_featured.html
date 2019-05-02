@@ -1,18 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
+	<header> Featured Truck: </header>
     {% for truck in row %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-			<header> Featured Trucks: </header>
               <!--<a class="mr-2" href="#">{{ truck }}</a> <br/>-->
-              <small class="text-muted">{{ truck.vehicleid }}</small>
+              <small class="text-muted">{{ truck.vehicleid }} {{truck.make}} {{truck.price}}</small>
             </div>
            
           </div>
         </article>
      {% endfor %}
-	 
+	 <header> Cheapest Trucks: </header>
 	 {% for truck in row2 %}
         <article class="media content-section">
           <div class="media-body">

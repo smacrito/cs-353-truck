@@ -184,7 +184,7 @@ def show_featured():
         if conn.is_connected():
             cursor = conn.cursor(dictionary=True)    # must add vehicle id here or find out how to put variable in for xxxxxx
         #cursor.execute("SELECT * FROM vehicle WHERE vehicleID = x")#extract from form in crud-update
-        cursor.execute("SELECT * FROM vehicle WHERE vehicleid = 3") #checked and working
+        cursor.execute("SELECT * FROM vehicle WHERE vehicleid = 3 FETCH NEXT 5 ROWS ONLY ") #checked and working
         row = cursor.fetchall()
         
         cursor2 = conn.cursor(dictionary=True)
