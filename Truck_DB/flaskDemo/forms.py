@@ -69,8 +69,11 @@ class PostTruck(FlaskForm):
 
 
 class createForm(FlaskForm):
+    make = StringField('Make', validators=[DataRequired()])
+    model = StringField('Model', validators=[DataRequired()])
+    color = StringField('Color', validators=[DataRequired()])
+    year = IntegerField('Year', validators=[DataRequired()])
     submit = SubmitField('Submit')
-
 #class SearchTruck(FlaskForm):
 #    make_list
 

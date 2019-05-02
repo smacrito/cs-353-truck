@@ -2,12 +2,32 @@
 {% block content %}
 <div class="content-section">
     <form method="POST" action="">
-
+		{{ form.hidden_tag() }}
         <select name = "option" id = 'truckList' >
-		{% for make in trucks %}
+		{% for make in makes %}
 			<option value="{{ make.make }}">{{ make.make }}</option>
 		{%endfor%}
 		</select>
+		
+		<select name = "option" id = 'modelList' >
+		{% for model in models %}
+			<option value="{{ model.model }}">{{ model.model }}</option>
+		{%endfor%}
+		</select>
+		
+		<select name = "option" id = 'colorList' >
+		{% for color in colors %}
+			<option value="{{ color.color }}">{{ color.color }}</option>
+		{%endfor%}
+		</select>
+		
+		<select name = "option" id = 'yearList' >
+		{% for year in years %}
+			<option value="{{ year.year }}">{{ year.year }}</option>
+		{%endfor%}
+		</select>
+		
+		
 		
         <div class="form-group">
 			{{ form.submit(class="btn btn-outline-info") }}

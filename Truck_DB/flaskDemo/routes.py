@@ -1,5 +1,7 @@
 import os
 import secrets
+import mysql.connector
+from mysql.connector import Error
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskDemo import app, db, bcrypt
@@ -12,21 +14,8 @@ from datetime import datetime
 @app.route("/")
 @app.route("/home")
 def home():
-    #results = Department.query.all()
-    #return render_template('dept_home.html', outString = results)
-    #posts = Post.query.all()
-    #return render_template('home.html', posts=posts)
     display = Vehicle.query.group_by(Vehicle.model).all()
-
-    #results = Department.query.all()
-    #return render_template('dept_home.html', outString = results)
-    #posts =  Post.query.all()
-    #return render_template('home.html', posts=posts)
-    #truckResults = Vehicle.query.get_or_404([make,model])
     return render_template('home.html', title='Join', trucks=display)
-
-
-   
 
 
 @app.route("/about")
@@ -85,8 +74,6 @@ def save_picture(form_picture):
 
     return picture_fn
 
-#@app.route("/lookup")
-
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
@@ -107,20 +94,6 @@ def account():
     return render_template('account.html', title='Account', form=form)
 
 
-@app.route("/vehiclecreate/new", methods=['GET', 'POST'])
-@login_required
-def createVehicle():#do not use
-    form = AssignForm()
-    if form.validate_on_submit():
-        truck = Works_On(make=form.make.data, color=form.color.data)
-        db.session.add(truck)
-        db.session.commit()
-        flash('You have added a new truck!', 'success')
-        return redirect(url_for('home'))
-    return render_template('create_assign.html', title='New Assign',
-                           form=form, legend='New Assign')
-
-
 @app.route("/assign/<pno>/<essn>", methods=['GET','POST'])
 @login_required
 def assign(make, model):
@@ -129,21 +102,39 @@ def assign(make, model):
 
 @app.route("/create", methods=['GET','POST'])
 def create():
-    truckList = ['Kenworth','Peterbilt','faek']
-    modelList = ['W990','T680','579']
-    form = createForm()
-    trucks = Vehicle.query.distinct()
-    if form.validate_on_submit():
-        truck = Vehicle(make = form.make.data, color = form.color.data)
-        db.session.add(truck)
-        db.session.commit()
-        flash('Added truck', 'success')
-        return redirect(url_for('home'))
-    #if request.method == 'POST':
-       # make = request.form['make']
-        #flash(str(make))
-    return render_template("create_vehicle.html", title = "Create Vehicle", truckList=truckList, form=form, trucks=trucks)
+    try:
         
+        conn = mysql.connector.connect(host='45.55.59.121',
+                                        database='truck',
+                                        user='truck',
+                                        password='453truck')
+        
+        cursor = conn.cursor(dictionary=True)
+        print("CONNECTED")
+        form = createForm()
+        makes = Vehicle.query.with_entities(Vehicle.make).distinct()#possible extra points for distinct dropdown list?
+        models = Vehicle.query.with_entities(Vehicle.model).distinct()
+        colors = Vehicle.query.with_entities(Vehicle.color).distinct()
+        years = Vehicle.query.with_entities(Vehicle.year).distinct()
+        if form.validate_on_submit():
+            print("in if")
+            truck = Vehicle(make = form.make.data, model = form.model.data, color = form.color.data, year = form.year.data)
+            #cursor.execute("INSTE
+            #db.session.add(truck)
+            cursor.execute("""INSERT INTO vehicle ('make','model','color','year') VALUES (%s, %s,%s,%d)""", make,model,color,year)
+            conn.commit()
+            flash('Added truck', 'success')
+            return redirect(url_for('create_vehicle', ))
+        #if request.method == 'POST':
+           # make = request.form['make']
+            #flash(str(make))
+        return render_template("create_vehicle.html", title = "Create Vehicle", form=form, makes=makes, models=models,colors=colors,years=years)
+
+    except Error as e:
+        print(e)#possibly delete or implement into the site
+
+    finally:
+        conn.close()        
 
 
 @app.route("/assign/<essn>/<pno>/update", methods=['GET', 'POST'])
