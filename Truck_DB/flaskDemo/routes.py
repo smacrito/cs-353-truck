@@ -3,7 +3,7 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskDemo import app, db, bcrypt
-from flaskDemo.forms import RegistrationForm, LoginForm #UpdateAccountForm,AssignUpdateForm PostForm,, AssignForm
+from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, createForm#, AssignUpdateForm, PostForm, AssignForm
 from flaskDemo.models import Customer, Employee, Purchase, Test_Drive, Vehicle
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
@@ -56,12 +56,9 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        if form.admin.data:
-            user = Employee.query.filter_by(email=form.email.data).first()
-        else:
-            user = Customer.query.filter_by(email=form.email.data).first()
-        if user and (user.password == form.password.data):
-            login_user(user, remember=form.remember.data)
+        customer = Customer.query.filter_by(email=form.email.data).first()
+        if customer and (customer.password == form.password.data):
+            login_user(customer, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -110,25 +107,43 @@ def account():
     return render_template('account.html', title='Account', form=form)
 
 
-@app.route("/assign/new", methods=['GET', 'POST'])
+@app.route("/vehiclecreate/new", methods=['GET', 'POST'])
 @login_required
-def new_assign():
+def createVehicle():#do not use
     form = AssignForm()
     if form.validate_on_submit():
-        assign = Works_On(essn=form.ssn.data, pno=form.pnumber.data, hours=form.hours.data)
-        db.session.add(assign)
+        truck = Works_On(make=form.make.data, color=form.color.data)
+        db.session.add(truck)
         db.session.commit()
-        flash('You have added a new assign!', 'success')
+        flash('You have added a new truck!', 'success')
         return redirect(url_for('home'))
     return render_template('create_assign.html', title='New Assign',
                            form=form, legend='New Assign')
 
 
-@app.route("/assign/<pno>/<essn>")
+@app.route("/assign/<pno>/<essn>", methods=['GET','POST'])
 @login_required
 def assign(make, model):
     assign = Works_On.query.get_or_404([essn,pno])
     return render_template('assign.html', title=str(assign.essn) + "_" + str(assign.pno), assign=assign, now=datetime.utcnow())
+
+@app.route("/create", methods=['GET','POST'])
+def create():
+    truckList = ['Kenworth','Peterbilt','faek']
+    modelList = ['W990','T680','579']
+    form = createForm()
+    trucks = Vehicle.query.distinct()
+    if form.validate_on_submit():
+        truck = Vehicle(make = form.make.data, color = form.color.data)
+        db.session.add(truck)
+        db.session.commit()
+        flash('Added truck', 'success')
+        return redirect(url_for('home'))
+    #if request.method == 'POST':
+       # make = request.form['make']
+        #flash(str(make))
+    return render_template("create_vehicle.html", title = "Create Vehicle", truckList=truckList, form=form, trucks=trucks)
+        
 
 
 @app.route("/assign/<essn>/<pno>/update", methods=['GET', 'POST'])
@@ -170,6 +185,7 @@ def delete_vehicle(vehicleid):
     db.session.commit()
     flash('The truck has been deleted!', 'success')
     return redirect(url_for('home'))
+
 
 # 8 Satisfied: Simple SELECT SQL statement; 10 Satisfied: Select aggregate SQL query
 @app.route("/show_featured")

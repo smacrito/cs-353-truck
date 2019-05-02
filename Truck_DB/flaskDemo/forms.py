@@ -67,34 +67,38 @@ class PostTruck(FlaskForm):
         if len(field.data) != 4 and field.data > (current_year + 1) or field.data < 1900:
             raise ValidationError('Not a valid year.')
 
+
+class createForm(FlaskForm):
+    submit = SubmitField('Submit')
+
 #class SearchTruck(FlaskForm):
 #    make_list
 
 #****************************************************************************** /AS   
 #class AssignUpdateForm(FlaskForm):
 
-            #    dnumber=IntegerField('Department Number', validators=[DataRequired()])
-                #essn = HiddenField("")
-
+ #               vehicleid=IntegerField('VehicleID', validators=[DataRequired()])
+ #               essn = HiddenField("")
+#
             #  Commented out using a text field, validated with a Regexp.  That also works, but a hassle to enter ssn.
-            #    mgr_ssn = StringField("Manager's SSN", validators=[DataRequired(),Regexp('^(?!000|666)[0-8][0-9]{2}(?!00)[0-9]{2}(?!0000)[0-9]{4}$', message="Please enter 9 digits for a social security.")])
+  #              mgr_ssn = StringField("Manager's SSN", validators=[DataRequired(),Regexp('^(?!000|666)[0-8][0-9]{2}(?!00)[0-9]{2}(?!0000)[0-9]{4}$', message="Please enter 9 digits for a social security.")])
 
             #  One of many ways to use SelectField or QuerySelectField.  Lots of issues using those fields!!
-                #employee = SelectField("Employee", choices=myChoices)  # myChoices defined at top
-                #project = SelectField("Project", project_choices=myProjectChoices)
+   #             employee = SelectField("Employee", choices=myChoices)  # myChoices defined at top
+    #            project = SelectField("Project", project_choices=myProjectChoices)
 
-                #hours = IntegerField("Hours", validators=[DataRequired()])
-            # the regexp works, and even gives an error message
-            #    mgr_start=DateField("Manager's Start Date:  yyyy-mm-dd",validators=[Regexp(regex)])
-            #    mgr_start = DateField("Manager's Start Date")
+      #          hours = IntegerField("Hours", validators=[DataRequired()])
+     #       # the regexp works, and even gives an error message
+       #         mgr_start=DateField("Manager's Start Date:  yyyy-mm-dd",validators=[Regexp(regex)])
+        #        mgr_start = DateField("Manager's Start Date")
 
-            #    mgr_start=DateField("Manager's Start Date", format='%Y-%m-%d')
+         #       mgr_start=DateField("Manager's Start Date", format='%Y-%m-%d')
 
     #ssn = SelectField("Employee", choices=myChoices)
-    #pnumber = SelectField("Project Number", coerce=int, choices=myProjectChoices)
-    #hours = DecimalField("Hours", places=1, validators=[DataRequired()])
+   # pnumber = SelectField("Project Number", coerce=int, choices=myProjectChoices)
+  #  hours = DecimalField("Hours", places=1, validators=[DataRequired()])
 
-    #submit = SubmitField('Update this assign')
+   # submit = SubmitField('Update this assign')
 
 
 # got rid of def validate_dnumber
@@ -107,10 +111,10 @@ class PostTruck(FlaskForm):
 
 #class AssignForm(AssignUpdateForm):
 
-    #submit = SubmitField('Add this assignment')
+  #  submit = SubmitField('Add this Truck')
 
-#    def validate_essn(self, dnumber):    #because dnumber is primary key and should be unique
-#        dept = Department.query.filter_by(dnumber=dnumber.data).first()
-#        if dept:
-#            raise ValidationError('That department number is taken. Please choose a different one.')
+  #  def validate_essn(self, vehicleid):    #because dnumber is primary key and should be unique
+     #   truck = vehicle.query.filter_by(vehicleid=vehicleid.data).first()
+        #if truck:
+           # raise ValidationError('That truck is taken. Please choose a different one.')
 

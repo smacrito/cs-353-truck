@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="">
+
+        <select name = "option" id = 'truckList' >
+		{% for make in trucks %}
+			<option value="{{ make.make }}">{{ make.make }}</option>
+		{%endfor%}
+		</select>
+		
+        <div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+        </div></form>
+
+</div>
+{% endblock content %}
