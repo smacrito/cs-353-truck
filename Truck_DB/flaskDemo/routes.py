@@ -48,6 +48,7 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
+        #Satisfies #9 Filter query
         if form.admin.data:
             user = Employee.query.filter_by(email=form.email.data).first()
         else:
@@ -189,7 +190,7 @@ def delete_vehicle(vehicleid):
     assign = Vehicle.query.get_or_404(vehicleid)
     db.session.delete(assign)
     db.session.commit()
-    ##flash('The truck has been deleted!', 'success')
+    flash('The truck has been deleted!', 'success')
     return redirect(url_for('home'))
 
 
