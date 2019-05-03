@@ -158,7 +158,9 @@ def create():
 @app.route("/vehicle/<make>/<model>", methods=['GET','POST'])
 #@login_required
 def show_vehicle(make, model):
-    truck = Vehicle.query.all() ##FIND
+    #truck = Vehicle.query.all() ##FIND
+    query = Vehicle.query
+    truck = query.filter(Vehicle.model == model).all()
     #vehicle = Vehicle.query.where(Vehicle.model=model).all()
     return render_template('show_vehicle.html', title='Vehicle',
                            truck=truck, legend='Vehicle')
